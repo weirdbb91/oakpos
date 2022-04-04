@@ -1,0 +1,27 @@
+version: '3'
+
+services: 
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: oakpos.backend-django
+    entrypoint: sh /usr/src/app/docker-entrypoint.sh db 3306
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./env/local.env
+    ports: 
+      - "8000:8000"
+    depends_on: 
+      - db
+
+  db:
+    platform: linux/x86_64
+    image: mysql:8.0-oracle
+    container_name: oakpos.db-mysql
+    restart: always
+    env_file:
+      - ./env/local.env
+    ports:
+      - "3306:3306"
