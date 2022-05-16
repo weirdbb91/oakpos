@@ -2,6 +2,9 @@ from django.db import models
 
 # Create your models here.
 
+exclude_model_name = ["TimestampedModel"]
+
+
 class TimestampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="생성 시각")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="수정 시각")
