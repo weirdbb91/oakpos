@@ -24,3 +24,17 @@ class Member(TimestampedModel):
     
     def __str__(self):
         return self.name
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, verbose_name="이름")
+    description = models.TextField(null=True, blank=True, verbose_name="설명")
+    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, verbose_name="상위 카테고리")
+    
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "카테고리"
+        verbose_name_plural = "카테고리 리스트"
+    
+    def __str__(self):
+        return self.name
