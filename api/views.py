@@ -45,6 +45,9 @@ class CommonRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             return self.serializer_class.Retrieve
         if self.request.method in ["PUT", "PATCH"]:
             return self.serializer_class.Update
+    
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class_dict = {}
