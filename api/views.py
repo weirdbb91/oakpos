@@ -1,5 +1,8 @@
+from collections import defaultdict
+
 from django.http import JsonResponse
 from rest_framework import generics
+from rest_framework.response import Response
 
 from . import models, serializers, utils
 
@@ -65,3 +68,27 @@ for name in utils.model_names:
             "serializer_class": getattr(serializers, f"{name}Serializers"),
         }
     )
+
+
+# [카테고리] 반환시 하위 카테고리 목록이 담길 상위 카테고리의 필드 이름
+sub_name = serializers.CategorySerializers.List.SUB_NAME
+
+def set_sub_list(top_category_list, subcategory_dict):
+    for category in top_category_list:
+        category[sub_name] = subcategory_dict[category["id"]]
+        if category[sub_name]:
+            set_sub_list(category[sub_name], subcategory_dict)
+
+# [카테고리] 카테고리는 계층구조를 만들어 반환한다
+def category_list(self, request, *args, **kwargs):
+        subcategory_dict = defaultdict(list)
+        
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        for category in serializer.data:
+            subcategory_dict[category["parent"]].append(category)
+        
+        set_sub_list(subcategory_dict[None], subcategory_dict)
+        return Response(subcategory_dict[None])
+
+# [카테고리] CategoryListCreateAPIView의 GET 메소드를 오버라이딩한다
+class_dict[f"CategoryListCreateAPIView"].get = category_list

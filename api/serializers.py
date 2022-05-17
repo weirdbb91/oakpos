@@ -31,6 +31,7 @@ class CategorySerializers():
         name = serializers.CharField(required=True, max_length=50)
         description = serializers.CharField(allow_null=True, allow_blank=True)
         parent = serializers.PrimaryKeyRelatedField(allow_null=True, read_only=True)
+        SUB_NAME = "sub" # 하위 카테고리 목록(List[카테고리] 타입)의 이름
         
         class Meta:
             model = models.Category
